@@ -136,7 +136,12 @@ public class Main : ObservableObject, IOcrPlugin, ILlm
         {
             Headers = new Dictionary<string, string>
             {
-                { "Authorization", "Bearer " + Settings.ApiKey }
+                { "Authorization", "Bearer " + Settings.ApiKey },
+                // 网关要求携带的自定义头（缺失会被 403 ClientForbidden 拦截）
+                { "x-ksc-company-code", "seasun" },
+                { "ksyun-code-type", "kscc-cli" },
+                { "ksyun-code-version", "1.1.20" },
+                { "User-Agent", "claude-cli/1.1.20 (external, cli)" }
             }
         };
 
