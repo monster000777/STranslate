@@ -163,5 +163,10 @@ public enum LangEnum
     /// <summary>
     /// 乌兹别克语
     /// </summary>
-    Uzbek
+    Uzbek,
+
+    /// <summary>
+    /// 维吾尔语
+    /// </summary>
+    Uyghur
 }

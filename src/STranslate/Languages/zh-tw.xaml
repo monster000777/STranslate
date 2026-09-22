@@ -29,6 +29,7 @@
     <sys:String x:Key="TimeoutPlaceholder">逾時時間（秒）</sys:String>
     <sys:String x:Key="SearchFunction">搜尋功能</sys:String>
     <sys:String x:Key="SearchFunctionToolTip">按 Ctrl+F 搜尋功能</sys:String>
+    <sys:String x:Key="NoResultsFound">未找到結果</sys:String>
     <sys:String x:Key="Function">功能</sys:String>
     <sys:String x:Key="Appearance">外觀</sys:String>
     <sys:String x:Key="AutoTranslateEnabled">啟用自動翻譯</sys:String>
@@ -40,6 +41,10 @@
     <sys:String x:Key="General_HideOnStartup">系統啟動時不顯示主視窗</sys:String>
     <sys:String x:Key="General_HideOnStartupDescription">STranslate 啟動後搜尋視窗隱藏在托盤中。</sys:String>
     <sys:String x:Key="General_HideWhenDeactivated">失去焦點時自動隱藏主視窗</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdge">貼頂自動收起</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdgeDescription">將視窗拖到螢幕頂部，滑鼠移開後自動收起，移到頂部感應條展開。貼頂時優先於失焦隱藏。</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelay">收起等待時間（毫秒）</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelayDescription">滑鼠位於視窗外時，自動收起前的等待時間，預設 600 毫秒。</sys:String>
     <sys:String x:Key="General_WindowPosition">主視窗位置</sys:String>
     <sys:String x:Key="General_WindowAlign">主視窗在顯示器上的位置</sys:String>
     <sys:String x:Key="General_MainWindowMaxHeightRatio">主視窗最大高度（螢幕比例）</sys:String>
@@ -83,7 +88,7 @@
     <sys:String x:Key="General_SelectedTextFetchTimeoutDescription">模擬複製後輪詢剪貼簿新文字的逾時時間，單位：毫秒。寫入成功會立即返回；部分 PDF 軟體寫入較慢時可適當調高。</sys:String>
     <sys:String x:Key="General_SelectedTextFetchTimeoutPlaceholder">500</sys:String>
     <sys:String x:Key="General_CrosswordFetchFailedFallbackTarget">劃詞取詞失敗回退目標</sys:String>
-    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">劃詞取詞失敗後，選擇回退到輸入翻譯或僅顯示主介面。</sys:String>
+    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">劃詞取詞失敗後，選擇輸入翻譯、顯示主介面或僅傳送系統匣通知。</sys:String>
     <sys:String x:Key="General_ImageQuality">圖片品質</sys:String>
     <sys:String x:Key="General_ImageQualityDescription">處理圖片時調整品質，線上OCR服務可能會限制圖片大小。</sys:String>
     <sys:String x:Key="General_DoubleClickTrayFunction">雙擊托盤功能</sys:String>
@@ -181,6 +186,7 @@
     <sys:String x:Key="Hotkey_CrosswordTranslateByCtrlSameCDescription">滑鼠選中文字快速按下 Ctrl+C+C 進行取詞翻譯。</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailed">劃詞取詞失敗，已開啟輸入翻譯</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailedShowWindow">劃詞取詞失敗，已開啟主介面顯示</sys:String>
+    <sys:String x:Key="CrosswordTranslateFetchFailedNotifyOnly">劃詞取詞失敗，請選取文字後重試。</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslation">滑鼠劃詞直接翻譯</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslationDescription">開啟或關閉滑鼠劃詞直接翻譯。</sys:String>
     <sys:String x:Key="Hotkey_ReplaceTranslate">替換翻譯</sys:String>
@@ -218,6 +224,8 @@
     <sys:String x:Key="Hotkey_OcrImTransWindow">OCR | 圖片翻譯視窗快捷鍵</sys:String>
     <sys:String x:Key="Hotkey_ReExecuteOcr">重新執行文字識別 | 圖片翻譯</sys:String>
     <sys:String x:Key="Hotkey_SwitchImage">切換渲染圖/標註圖</sys:String>
+    <sys:String x:Key="Hotkey_SwitchImageDescription">也支援在貼圖視窗中切換原圖/譯文圖。</sys:String>
+    <sys:String x:Key="Hotkey_PinImageTranslate">貼圖（精簡圖片翻譯視窗）</sys:String>
     <sys:String x:Key="Hotkey_QrCode">識別二維碼</sys:String>
     <sys:String x:Key="Hotkey_QrCodeDescription">該熱鍵僅支援OCR視窗</sys:String>
     <sys:String x:Key="Hotkey_IncrementalTranslate">增量翻譯</sys:String>
@@ -316,6 +324,11 @@
     <sys:String x:Key="Network_HelpBypassListContent" xml:space="preserve">使用分號(;)分隔多個地址，支持通配符(*)：&#10;localhost;127.*;10.*;192.168.*;*.example.com</sys:String>
     <sys:String x:Key="Network_HelpEffectiveness">生效說明</sys:String>
     <sys:String x:Key="Network_HelpEffectivenessContent" xml:space="preserve">修改代理配置需等待 2 分鐘後生效&#10;立即生效需重啟</sys:String>
+    <sys:String x:Key="ProxyTesting">正在測試連接...</sys:String>
+    <sys:String x:Key="ProxyTestSuccess">連接成功！當前IP資訊：{0}</sys:String>
+    <sys:String x:Key="ProxyTestFailed">連接失敗，請檢查代理設置</sys:String>
+    <sys:String x:Key="ProxyTestError">測試失敗：{0}</sys:String>
+    <sys:String x:Key="ExternalCallStartFailed">啟動服務失敗，請重新設定端口: {0}</sys:String>
 
     <!--  Standalone Page  -->
     <sys:String x:Key="Standalone_OcrShowAnnotationHeader">顯示文字偵測結果</sys:String>
@@ -588,6 +601,7 @@
     <sys:String x:Key="LangEnumDutch">荷蘭語</sys:String>
     <sys:String x:Key="LangEnumUkrainian">烏克蘭語</sys:String>
     <sys:String x:Key="LangEnumUzbek">烏茲別克語</sys:String>
+    <sys:String x:Key="LangEnumUyghur">維吾爾語</sys:String>
 
     <sys:String x:Key="LanguageDetectorTypeLocal">本地識別</sys:String>
     <sys:String x:Key="LanguageDetectorTypeBaidu">百度識別</sys:String>
@@ -615,6 +629,7 @@
     <sys:String x:Key="TextSeparatorHandleScopeSilentOcr">靜默 OCR</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetInputTranslate">輸入翻譯</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetShowWindow">顯示主介面</sys:String>
+    <sys:String x:Key="CrosswordFetchFailedFallbackTargetNotifyOnly">僅通知</sys:String>
 
     <sys:String x:Key="PluginTypeAll">所有外掛</sys:String>
     <sys:String x:Key="PluginTypeTranslate">文字翻譯</sys:String>
@@ -709,6 +724,9 @@
     <sys:String x:Key="SelectPluginFile">選擇外掛檔案</sys:String>
     <sys:String x:Key="PluginInstallFailed">外掛安裝失敗</sys:String>
     <sys:String x:Key="PluginInstallSuccess">插件安裝成功</sys:String>
+    <sys:String x:Key="PluginVersionParseFailed">無法解析外掛版本: {0}</sys:String>
+    <sys:String x:Key="PluginVersionTooOld">外掛版本過舊: {0} v{1}，目前已安裝版本為 v{2}。</sys:String>
+    <sys:String x:Key="PluginUpgradeAvailable">可以選擇升級到新版本(v{0})。</sys:String>
     <sys:String x:Key="PluginDeleteConfirm" xml:space="preserve">開發者：{0}&#10;版本：{1}&#10;是否確認刪除外掛「{2}」？</sys:String>
     <sys:String x:Key="PluginDeleteFailed">外掛刪除失敗</sys:String>
     <sys:String x:Key="PluginDeleteForRestart">外掛已標記刪除，重啟後生效</sys:String>
@@ -741,6 +759,12 @@
     <sys:String x:Key="BuiltIn">內建</sys:String>
     <sys:String x:Key="PreInstall">預裝</sys:String>
     <sys:String x:Key="Extend">擴展</sys:String>
+    <sys:String x:Key="AddTranslationService">新增翻譯服務</sys:String>
+    <sys:String x:Key="AddOcrService">新增文本識別服務</sys:String>
+    <sys:String x:Key="AddTtsService">新增語音合成服務</sys:String>
+    <sys:String x:Key="AddVocabularyService">新增生詞本服務</sys:String>
+    <sys:String x:Key="AddService">新增服務</sys:String>
+    <sys:String x:Key="DictionaryServiceNotSupportReplace">詞典服務不支援替換功能。</sys:String>
 
     <!--  // Dictionary //  -->
     <sys:String x:Key="PlayPronunciation">播放發音</sys:String>
@@ -855,4 +879,15 @@
     <sys:String x:Key="EditPrompt_Content">編輯</sys:String>
     <sys:String x:Key="Temperature">溫度控制</sys:String>
     <sys:String x:Key="Temperature_Description">控制著模型輸出的隨機性</sys:String>
+    <sys:String x:Key="ImageTranslatePin">貼圖</sys:String>
+    <sys:String x:Key="ImageTranslatePinFailed">貼圖失敗</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedCopyAll">複製全文</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowOriginal">顯示原圖</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowTranslation">顯示譯文</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnOcrServiceChanged">圖片翻譯：切換 OCR 服務後立即翻譯</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnTranslateServiceChanged">圖片翻譯：切換翻譯服務後立即翻譯</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnLanguageChanged">圖片翻譯：切換語言後立即翻譯</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnLayoutChanged">圖片翻譯：切換分段後立即翻譯</sys:String>
+    <sys:String x:Key="General_OcrOnServiceChanged">OCR 介面：切換服務後立即辨識</sys:String>
+    <sys:String x:Key="General_OcrOnLanguageChanged">OCR 介面：切換語言後立即辨識</sys:String>
 </ResourceDictionary>

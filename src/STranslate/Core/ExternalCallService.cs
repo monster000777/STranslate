@@ -38,8 +38,8 @@ public class ExternalCallService(
         }
         catch (Exception ex)
         {
-            var msg = $"启动服务失败请重新配置端口: {prefix}";
-            logger.LogError(ex, msg);
+            logger.LogError(ex, "启动服务失败请重新配置端口: {Prefix}", prefix);
+            var msg = string.Format(i18n.GetTranslation("ExternalCallStartFailed"), prefix);
             OnActionOccurred?.Invoke(msg);
             notification.Show(i18n.GetTranslation("Prompt"), msg);
 

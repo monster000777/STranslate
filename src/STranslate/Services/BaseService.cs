@@ -59,15 +59,15 @@ public abstract partial class BaseService : ObservableObject, IDisposable
 
     public async Task<Service?> AddAsync()
     {
-        var title = ServiceType switch
+        var titleKey = ServiceType switch
         {
-            ServiceType.Translation => "添加翻译服务",
-            ServiceType.OCR => "添加文本识别服务",
-            ServiceType.TTS => "添加语音合成服务",
-            ServiceType.Vocabulary => "添加生词本服务",
-            _ => "添加服务"
+            ServiceType.Translation => "AddTranslationService",
+            ServiceType.OCR => "AddOcrService",
+            ServiceType.TTS => "AddTtsService",
+            ServiceType.Vocabulary => "AddVocabularyService",
+            _ => "AddService"
         };
-        var contentDialog = new ServiceContentDialog(title, Plugins);
+        var contentDialog = new ServiceContentDialog(_i18n.GetTranslation(titleKey), Plugins);
         if (await contentDialog.ShowAsync() == ContentDialogResult.Primary)
         {
             if (contentDialog.Result is PluginMetaData metaData)

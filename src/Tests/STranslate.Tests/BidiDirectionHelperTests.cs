@@ -18,6 +18,17 @@ public class BidiDirectionHelperTests
     }
 
     [Fact]
+    public void Explicit_Uyghur_Uses_RightToLeft_Direction()
+    {
+        var direction = BidiDirectionHelper.GetFlowDirection(
+            "English text",
+            LangEnum.Uyghur,
+            LangEnum.English);
+
+        Assert.Equal(FlowDirection.RightToLeft, direction);
+    }
+
+    [Fact]
     public void Detected_Language_Is_Used_When_Explicit_Language_Is_Auto()
     {
         var direction = BidiDirectionHelper.GetFlowDirection(

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cnvt="clr-namespace:STranslate.Converters"
     xmlns:control="clr-namespace:STranslate.Controls"
+    xmlns:core="clr-namespace:STranslate.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
@@ -51,6 +52,7 @@
         <KeyBinding
             Key="Q"
             Command="{Binding ExitCommand}"
+            CommandParameter="{x:Static core:AppShutdownReason.KeyboardShortcut}"
             Modifiers="Ctrl+Shift" />
         <KeyBinding
             Key="{Binding HotkeySettings.OpenSettingsHotkey.Key, Converter={cnvt:StringToKeyBindingConverter}, ConverterParameter={x:Static cnvt:HotkeyMode.Key}}"
@@ -367,7 +369,10 @@
                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Settings_20_Regular}" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Command="{Binding Source={StaticResource ViewModel}, Path=Data.ExitCommand}" Header="{DynamicResource Exit}">
+                    <MenuItem
+                        Command="{Binding Source={StaticResource ViewModel}, Path=Data.ExitCommand}"
+                        CommandParameter="{x:Static core:AppShutdownReason.TrayMenu}"
+                        Header="{DynamicResource Exit}">
                         <MenuItem.Icon>
                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.ArrowExit_20_Regular}" />
                         </MenuItem.Icon>

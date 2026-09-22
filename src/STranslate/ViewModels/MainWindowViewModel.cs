@@ -173,7 +173,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     #region Properties
 
     private MainWindow MainWindow => (Application.Current.MainWindow as MainWindow)!;
-    private bool IsMainWindowVisible => MainWindow.Visibility == Visibility.Visible;
+    private bool IsMainWindowVisible => MainWindow.Visibility == Visibility.Visible && !MainWindow.IsTopEdgeCollapsed;
 
     public DataProvider DataProvider { get; }
 
@@ -1819,7 +1819,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private async Task CrosswordTranslateAsync()
     {
-        var (success, text) = await GetTextAsync();
+        var (success, text) = await GetTextAsync(showFailureFeedback: false);
         if (!success || string.IsNullOrWhiteSpace(text))
         {
             HandleCrosswordFetchFailed();
@@ -1962,6 +1962,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     public void Show()
     {
+        var expandedFromTopEdge = MainWindow.ExpandFromTopEdge();
         if (Settings.MainWindowLeft <= -18000 && Settings.MainWindowTop <= -18000)
         {
             Settings.MainWindowLeft = _cacheLeft;
@@ -1969,7 +1970,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         }
         MainWindow.Visibility = Visibility.Visible;
         UpdateMainWindowMaxHeightConstraint();
-        UpdatePosition();
+        if (!expandedFromTopEdge) UpdatePosition();
         UpdateMainWindowMaxHeightConstraint();
 
         Win32Helper.ActivateForegroundWindow(MainWindow);
@@ -2013,7 +2014,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
                 ToggleGlobalHotkey();
                 break;
             case DoubleClickTrayFunction.Exit:
-                Exit();
+                Exit(AppShutdownReason.TrayDoubleClick);
                 break;
             default:
                 break;
@@ -2120,7 +2121,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private void Exit() => Application.Current.Shutdown();
+    private void Exit(AppShutdownReason reason) => App.RequestShutdown(reason);
 
     #endregion
 
@@ -2444,7 +2445,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void AdjustPositionForContentSizeChanged()
     {
-        if (_isAdjustingWindowPositionForContent || !IsMainWindowVisible || MainWindow.WindowState == WindowState.Minimized)
+        if (_isAdjustingWindowPositionForContent || !IsMainWindowVisible || MainWindow.IsTopEdgeDocked || MainWindow.WindowState == WindowState.Minimized)
             return;
 
         var windowHeight = MainWindow.ActualHeight > 0 ? MainWindow.ActualHeight : MainWindow.MinHeight;
@@ -2832,7 +2833,7 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
         SaveToVocabularyCancelCommand.Execute(null);
     }
 
-    private async Task<(bool success, string text)> GetTextAsync()
+    private async Task<(bool success, string text)> GetTextAsync(bool showFailureFeedback = true)
     {
         try
         {
@@ -2840,8 +2841,11 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
             if (string.IsNullOrEmpty(text))
             {
                 _logger.LogWarning("取词失败，可能：未选中文本、文本禁止复制、取词间隔过短、文本所属软件权限高于本软件");
-                Show();
-                _snackbar.ShowWarning(_i18n.GetTranslation("NoTextRecognizedMessage"));
+                if (showFailureFeedback)
+                {
+                    Show();
+                    _snackbar.ShowWarning(_i18n.GetTranslation("NoTextRecognizedMessage"));
+                }
                 return (false, string.Empty);
             }
             return (true, text);
@@ -2857,6 +2861,11 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
     {
         switch (Settings.CrosswordFetchFailedFallbackTarget)
         {
+            case CrosswordFetchFailedFallbackTarget.NotifyOnly:
+                _notification.Show(
+                    _i18n.GetTranslation("Hotkey_CrosswordTranslate"),
+                    _i18n.GetTranslation("CrosswordTranslateFetchFailedNotifyOnly"));
+                break;
             case CrosswordFetchFailedFallbackTarget.ShowWindow:
                 Show();
                 _snackbar.ShowWarning(_i18n.GetTranslation("CrosswordTranslateFetchFailedShowWindow"), 3000);

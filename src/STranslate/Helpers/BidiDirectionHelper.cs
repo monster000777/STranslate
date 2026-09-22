@@ -65,7 +65,7 @@ public static class BidiDirectionHelper
     }
 
     private static bool IsRightToLeftLanguage(LangEnum language)
-        => language is LangEnum.Arabic or LangEnum.Persian;
+        => language is LangEnum.Arabic or LangEnum.Persian or LangEnum.Uyghur;
 
     private static bool IsRightToLeftRune(Rune rune)
     {

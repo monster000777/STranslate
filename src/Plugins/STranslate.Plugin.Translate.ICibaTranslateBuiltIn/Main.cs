@@ -72,12 +72,14 @@ public class Main : TranslatePluginBase
         LangEnum.Dutch => "nl",
         LangEnum.Ukrainian => "uk",
         LangEnum.Uzbek => "auto",
+        LangEnum.Uyghur => "ug",
         _ => "auto"
     };
 
     public override string? GetTargetLanguage(LangEnum langEnum) => langEnum switch
     {
         LangEnum.Uzbek => "uz",
+        LangEnum.Uyghur => "ug",
         _ => GetSourceLanguage(langEnum)
     };
 

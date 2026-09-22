@@ -45,6 +45,7 @@ public class OcrSpacePluginTests
     [InlineData(LangEnum.NorwegianNynorsk)]
     [InlineData(LangEnum.Persian)]
     [InlineData(LangEnum.Uzbek)]
+    [InlineData(LangEnum.Uyghur)]
     public void LangConverter_UnsupportedFallsBackToAuto(LangEnum lang)
     {
         var plugin = new Main();

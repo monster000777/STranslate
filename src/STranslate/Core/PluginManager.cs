@@ -333,22 +333,26 @@ public class PluginManager : IDisposable
 
     private PluginInstallResult CheckSamePluginVersion(PluginMetaData existingPlugin, PluginMetaData incomingPlugin)
     {
+        var i18n = Ioc.Default.GetRequiredService<Internationalization>();
+
         if (!Version.TryParse(incomingPlugin.Version, out var incomingVersion))
         {
-            var message = $"无法解析插件版本: {incomingPlugin.Version}";
-            _logger.LogTrace(message);
+            _logger.LogTrace("无法解析插件版本: {Version}", incomingPlugin.Version);
+            var message = string.Format(i18n.GetTranslation("PluginVersionParseFailed"), incomingPlugin.Version);
             return PluginInstallResult.Fail(message, existingPlugin);
         }
 
         if (Version.TryParse(existingPlugin.Version, out var installedVersion) && incomingVersion <= installedVersion)
         {
-            var message = $"插件版本过旧: {incomingPlugin.Name} v{incomingPlugin.Version}，当前已安装版本为 v{existingPlugin.Version}。";
-            _logger.LogTrace(message);
+            _logger.LogTrace("插件版本过旧: {Name} v{Version}，当前已安装版本为 v{InstalledVersion}。",
+                incomingPlugin.Name, incomingPlugin.Version, existingPlugin.Version);
+            var message = string.Format(i18n.GetTranslation("PluginVersionTooOld"), incomingPlugin.Name, incomingPlugin.Version,
+                existingPlugin.Version);
             return PluginInstallResult.Fail(message, existingPlugin);
         }
 
-        var upgradeMessage = $"可以选择升级到新版本(v{incomingPlugin.Version})。";
-        _logger.LogTrace(upgradeMessage);
+        _logger.LogTrace("可以选择升级到新版本(v{Version})。", incomingPlugin.Version);
+        var upgradeMessage = string.Format(i18n.GetTranslation("PluginUpgradeAvailable"), incomingPlugin.Version);
         return PluginInstallResult.RequiresUpgrade(upgradeMessage, incomingPlugin, existingPlugin);
     }
 

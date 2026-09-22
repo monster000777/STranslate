@@ -35,10 +35,12 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
     private MainWindow? _mainWindow;
     private MainWindowViewModel? _mainWindowViewModel;
     private PluginManager? _pluginManager;
+    private PinnedWindowController? _pinnedWindowController;
     private Notification? _notification;
     private AutoUpdateCheckerService? _autoUpdateCheckerService;
     private MouseSelectionService? _mouseSelectionService;
     private static bool _disposed;
+    private AppShutdownReason _shutdownReason = AppShutdownReason.ExternalOrUnknown;
 
     public bool IsNavigated { get; set; }
 
@@ -129,6 +131,7 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
                     services.AddSingleton<IAudioPlayer, AudioPlayer>();
                     services.AddSingleton<IScreenshot, Screenshot>();
                     services.AddSingleton<ISnackbar, Snackbar>();
+                    services.AddSingleton<PinnedWindowController>();
 
                     services.AddSingleton<BackupService>();
 
@@ -208,6 +211,7 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
         _pluginManager = Ioc.Default.GetRequiredService<PluginManager>();
         _pluginManager.LoadPlugins();
         Ioc.Default.GetRequiredService<ServiceManager>().LoadServices();
+        _pinnedWindowController = Ioc.Default.GetRequiredService<PinnedWindowController>();
         Ioc.Default.GetRequiredService<SqlService>().InitializeDB();
 
         RegisterAppDomainExceptions();
@@ -316,8 +320,6 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
         Ioc.Default.GetRequiredService<Internationalization>()
             .InitializeLanguage(_settings.NonNull().Language);
 
-        var previousShutdownMode = ShutdownMode;
-        ShutdownMode = ShutdownMode.OnExplicitShutdown;
         AppRuntimeState.BeginInitialSetup();
         try
         {
@@ -332,7 +334,6 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
         }
         finally
         {
-            ShutdownMode = previousShutdownMode;
             AppRuntimeState.EndInitialSetup();
         }
     }
@@ -446,6 +447,16 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
 
     #region Register Events
 
+    internal static void RequestShutdown(AppShutdownReason reason)
+    {
+        if (Current is not App app)
+            return;
+
+        app._shutdownReason = reason;
+        app._logger?.LogInformation("Application shutdown requested. Reason: {Reason}", reason);
+        app.Shutdown();
+    }
+
     private void RegisterExitEvents()
     {
         AppDomain.CurrentDomain.ProcessExit += (s, e) =>
@@ -456,12 +467,13 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
 
         Current.Exit += (s, e) =>
         {
-            _logger?.LogInformation("Application Exit");
+            _logger?.LogInformation("Application Exit. Reason: {Reason}", _shutdownReason);
             Dispose();
         };
 
         Current.SessionEnding += (s, e) =>
         {
+            _shutdownReason = AppShutdownReason.SystemSessionEnding;
             _logger?.LogInformation("Session Ending");
             Dispose();
         };
@@ -539,7 +551,9 @@ public partial class App : ISingleInstanceApp, INavigation, IDisposable
             // Dispose needs to be called on the main Windows thread,
             // since some resources owned by the thread need to be disposed.
             _autoUpdateCheckerService?.Dispose();
+            _hotkeySettings?.Dispose();
             _notification?.Uninstall();
+            _pinnedWindowController?.CloseAll();
             _mainWindowViewModel?.Dispose();
             _mouseSelectionService?.Dispose();
             _mainWindow?.Dispatcher.Invoke(_mainWindow.Dispose);

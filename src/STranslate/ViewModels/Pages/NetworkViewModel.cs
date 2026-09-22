@@ -9,6 +9,7 @@ namespace STranslate.ViewModels.Pages;
 public partial class NetworkViewModel : SearchViewModelBase
 {
     private readonly IHttpService _httpService;
+    private readonly Internationalization _i18n;
     private readonly ILogger<NetworkViewModel> _logger;
     private readonly ExternalCallService _externalCallService;
     private readonly Action<string> _externalActionHandler;
@@ -35,6 +36,7 @@ public partial class NetworkViewModel : SearchViewModelBase
         Settings = settings;
         DataProvider = dataProvider;
         _httpService = httpService;
+        _i18n = i18n;
         _logger = logger;
         _externalCallService = externalCallService;
 
@@ -48,7 +50,7 @@ public partial class NetworkViewModel : SearchViewModelBase
         if (IsTesting) return;
 
         IsTesting = true;
-        TestResult = "正在测试连接...";
+        TestResult = _i18n.GetTranslation("ProxyTesting");
 
         try
         {
@@ -56,16 +58,16 @@ public partial class NetworkViewModel : SearchViewModelBase
             if (isConnected)
             {
                 var ip = await _httpService.GetCurrentIpAsync();
-                TestResult = $"连接成功！当前IP信息：{ip}";
+                TestResult = string.Format(_i18n.GetTranslation("ProxyTestSuccess"), ip);
             }
             else
             {
-                TestResult = "连接失败，请检查代理设置";
+                TestResult = _i18n.GetTranslation("ProxyTestFailed");
             }
         }
         catch (Exception ex)
         {
-            TestResult = $"测试失败：{ex.Message}";
+            TestResult = string.Format(_i18n.GetTranslation("ProxyTestError"), ex.Message);
             _logger.LogError(ex, "代理连接测试失败");
         }
         finally

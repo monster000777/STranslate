@@ -345,7 +345,7 @@
                                 WindowTitle="{DynamicResource Hotkey_ReExecuteOcr}" />
                         </ui:SettingsCard>
 
-                        <ui:SettingsCard Header="{DynamicResource Hotkey_SwitchImage}">
+                        <ui:SettingsCard Description="{DynamicResource Hotkey_SwitchImageDescription}" Header="{DynamicResource Hotkey_SwitchImage}">
                             <control:HotkeyControl
                                 DefaultHotkey="{Binding HotkeySettings.SwitchImageHotkey.Default}"
                                 Hotkey="{Binding HotkeySettings.SwitchImageHotkey.Key}"
@@ -361,6 +361,13 @@
                                 Type="OcrWindow"
                                 ValidateKeyGesture="False"
                                 WindowTitle="{DynamicResource Hotkey_QrCode}" />
+                        </ui:SettingsCard>
+                        <ui:SettingsCard Header="{DynamicResource Hotkey_PinImageTranslate}">
+                            <control:HotkeyControl
+                                DefaultHotkey="{Binding HotkeySettings.PinImageTranslateHotkey.Default}"
+                                Hotkey="{Binding HotkeySettings.PinImageTranslateHotkey.Key}"
+                                Type="ImageTransWindow"
+                                WindowTitle="{DynamicResource Hotkey_PinImageTranslate}" />
                         </ui:SettingsCard>
                     </ui:SettingsExpander.Items>
                 </ui:SettingsExpander>

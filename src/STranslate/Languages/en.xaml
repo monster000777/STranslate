@@ -29,6 +29,7 @@
     <sys:String x:Key="TimeoutPlaceholder">Timeout (seconds)</sys:String>
     <sys:String x:Key="SearchFunction">Search Function</sys:String>
     <sys:String x:Key="SearchFunctionToolTip">Ctrl+F to search function</sys:String>
+    <sys:String x:Key="NoResultsFound">No results found</sys:String>
     <sys:String x:Key="Function">Function</sys:String>
     <sys:String x:Key="Appearance">Appearance</sys:String>
     <sys:String x:Key="AutoTranslateEnabled">Enable Auto-Translate</sys:String>
@@ -40,6 +41,10 @@
     <sys:String x:Key="General_HideOnStartup">Hide Window on System Startup</sys:String>
     <sys:String x:Key="General_HideOnStartupDescription">The search window is hidden in the tray after STranslate starts.</sys:String>
     <sys:String x:Key="General_HideWhenDeactivated">Auto Hide Window When Loses Focus</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdge">Auto-hide at Top Edge</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdgeDescription">Drag the window to the top edge to dock it. Move the pointer away to collapse, and hover over the edge to expand. Docking takes priority over hiding on focus loss.</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelay">Collapse delay (ms)</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelayDescription">Wait time before collapsing while the pointer is outside the window. Default: 600 ms.</sys:String>
     <sys:String x:Key="General_WindowPosition">Main Window Location</sys:String>
     <sys:String x:Key="General_WindowAlign">Main Window Position on Monitor</sys:String>
     <sys:String x:Key="General_MainWindowMaxHeightRatio">Main Window Max Height (Screen Ratio)</sys:String>
@@ -83,7 +88,7 @@
     <sys:String x:Key="General_SelectedTextFetchTimeoutDescription">Timeout for polling new clipboard text after simulated copy, in milliseconds. Returns as soon as text is updated; increase this for PDF apps that update slowly.</sys:String>
     <sys:String x:Key="General_SelectedTextFetchTimeoutPlaceholder">500</sys:String>
     <sys:String x:Key="General_CrosswordFetchFailedFallbackTarget">Word Selection Failure Fallback</sys:String>
-    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">When selected text capture fails, choose whether to switch to input translation or only show the main window.</sys:String>
+    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">Choose whether to open input translation, show the main window, or only send a tray notification when selected text capture fails.</sys:String>
     <sys:String x:Key="General_ImageQuality">Image Quality</sys:String>
     <sys:String x:Key="General_ImageQualityDescription">Adjust the quality when processing images. Online OCR services may limit image size.</sys:String>
     <sys:String x:Key="General_DoubleClickTrayFunction">Double-Click Tray Function</sys:String>
@@ -181,6 +186,7 @@
     <sys:String x:Key="Hotkey_CrosswordTranslateByCtrlSameCDescription">Quickly press Ctrl+C+C after selecting text with the mouse for text translation.</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailed">Failed to capture selected text, switched to input translation.</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailedShowWindow">Failed to capture selected text, switched to main window display.</sys:String>
+    <sys:String x:Key="CrosswordTranslateFetchFailedNotifyOnly">Could not capture the selected text. Please select text and try again.</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslation">Mouse Selection Translation</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslationDescription">Enable or disable immediate mouse selection translation.</sys:String>
     <sys:String x:Key="Hotkey_ReplaceTranslate">Replace Translation</sys:String>
@@ -218,6 +224,8 @@
     <sys:String x:Key="Hotkey_OcrImTransWindow">OCR | Image Translation Window Hotkey</sys:String>
     <sys:String x:Key="Hotkey_ReExecuteOcr">Re-execute Text Recognition | Image Translation</sys:String>
     <sys:String x:Key="Hotkey_SwitchImage">Switch Rendering/Annotation Image</sys:String>
+    <sys:String x:Key="Hotkey_SwitchImageDescription">Also supports switching between the original and translated image in pinned windows.</sys:String>
+    <sys:String x:Key="Hotkey_PinImageTranslate">Pin image translation (Compact)</sys:String>
     <sys:String x:Key="Hotkey_QrCode">Recognize QR Code</sys:String>
     <sys:String x:Key="Hotkey_QrCodeDescription">This hotkey is only supported in OCR window</sys:String>
     <sys:String x:Key="Hotkey_IncrementalTranslate">Incremental Translation</sys:String>
@@ -316,6 +324,11 @@
     <sys:String x:Key="Network_HelpBypassListContent" xml:space="preserve">Use semicolons (;) to separate multiple addresses, supports wildcards (*):&#10;localhost;127.*;10.*;192.168.*;*.example.com</sys:String>
     <sys:String x:Key="Network_HelpEffectiveness">Effectiveness</sys:String>
     <sys:String x:Key="Network_HelpEffectivenessContent" xml:space="preserve">Changes to proxy settings take effect after 2 minutes&#10;Apply immediately need restart</sys:String>
+    <sys:String x:Key="ProxyTesting">Testing connection...</sys:String>
+    <sys:String x:Key="ProxyTestSuccess">Connection successful! Current IP info: {0}</sys:String>
+    <sys:String x:Key="ProxyTestFailed">Connection failed, please check the proxy settings</sys:String>
+    <sys:String x:Key="ProxyTestError">Test failed: {0}</sys:String>
+    <sys:String x:Key="ExternalCallStartFailed">Failed to start the service, please reconfigure the port: {0}</sys:String>
 
     <!--  Standalone Page  -->
     <sys:String x:Key="Standalone_OcrShowAnnotationHeader">Show Annotation</sys:String>
@@ -585,6 +598,7 @@
     <sys:String x:Key="LangEnumDutch">Dutch</sys:String>
     <sys:String x:Key="LangEnumUkrainian">Ukrainian</sys:String>
     <sys:String x:Key="LangEnumUzbek">Uzbek</sys:String>
+    <sys:String x:Key="LangEnumUyghur">Uyghur</sys:String>
 
     <sys:String x:Key="LanguageDetectorTypeLocal">Local Detection</sys:String>
     <sys:String x:Key="LanguageDetectorTypeBaidu">Baidu Detection</sys:String>
@@ -612,6 +626,7 @@
     <sys:String x:Key="TextSeparatorHandleScopeSilentOcr">Silent OCR</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetInputTranslate">Input Translate</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetShowWindow">Show Main Window</sys:String>
+    <sys:String x:Key="CrosswordFetchFailedFallbackTargetNotifyOnly">Notify Only</sys:String>
 
     <sys:String x:Key="PluginTypeAll">All Plugins</sys:String>
     <sys:String x:Key="PluginTypeTranslate">Translate</sys:String>
@@ -706,6 +721,9 @@
     <sys:String x:Key="SelectPluginFile">Select Plugin File</sys:String>
     <sys:String x:Key="PluginInstallFailed">Plugin installation failed</sys:String>
     <sys:String x:Key="PluginInstallSuccess">Plugin installation success</sys:String>
+    <sys:String x:Key="PluginVersionParseFailed">Unable to parse plugin version: {0}</sys:String>
+    <sys:String x:Key="PluginVersionTooOld">Plugin version is too old: {0} v{1}, the installed version is v{2}.</sys:String>
+    <sys:String x:Key="PluginUpgradeAvailable">You can upgrade to the new version (v{0}).</sys:String>
     <sys:String x:Key="PluginDeleteConfirm" xml:space="preserve">Developer: {0}&#10;Version: {1}&#10;Are you sure you want to delete the plugin "{2}"?</sys:String>
     <sys:String x:Key="PluginDeleteFailed">Failed to delete the plugin</sys:String>
     <sys:String x:Key="PluginDeleteForRestart">The plugin has been marked for deletion. Restart to take effect.</sys:String>
@@ -738,6 +756,12 @@
     <sys:String x:Key="BuiltIn">Built-in</sys:String>
     <sys:String x:Key="PreInstall">Pre-installed</sys:String>
     <sys:String x:Key="Extend">Extension</sys:String>
+    <sys:String x:Key="AddTranslationService">Add Translation Service</sys:String>
+    <sys:String x:Key="AddOcrService">Add OCR Service</sys:String>
+    <sys:String x:Key="AddTtsService">Add TTS Service</sys:String>
+    <sys:String x:Key="AddVocabularyService">Add Vocabulary Service</sys:String>
+    <sys:String x:Key="AddService">Add Service</sys:String>
+    <sys:String x:Key="DictionaryServiceNotSupportReplace">Dictionary services do not support the replace feature.</sys:String>
 
     <!--  // Dictionary //  -->
     <sys:String x:Key="PlayPronunciation">Play Pronunciation</sys:String>
@@ -852,4 +876,15 @@
     <sys:String x:Key="EditPrompt_Content">Edit</sys:String>
     <sys:String x:Key="Temperature">Temperature Control</sys:String>
     <sys:String x:Key="Temperature_Description">Controls the randomness of the model's output</sys:String>
+    <sys:String x:Key="ImageTranslatePin">Pin</sys:String>
+    <sys:String x:Key="ImageTranslatePinFailed">Could not pin the result</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedCopyAll">Copy all text</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowOriginal">Show original image</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowTranslation">Show translation</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnOcrServiceChanged">Image translation: translate on OCR service change</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnTranslateServiceChanged">Image translation: translate on translation service change</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnLanguageChanged">Image translation: translate on language change</sys:String>
+    <sys:String x:Key="General_ImageTranslateOnLayoutChanged">Image translation: translate on segmentation change</sys:String>
+    <sys:String x:Key="General_OcrOnServiceChanged">OCR window: recognize on service change</sys:String>
+    <sys:String x:Key="General_OcrOnLanguageChanged">OCR window: recognize on language change</sys:String>
 </ResourceDictionary>

@@ -64,6 +64,50 @@ public static class Win32Helper
         SetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, style);
     }
 
+    /// <summary>
+    /// 禁用系统最大化能力，保留窗口边缘缩放。
+    /// </summary>
+    internal static void DisableMaximize(Window window)
+    {
+        var hwnd = GetWindowHandle(window);
+        var style = GetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
+        SetWindowStyle(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, style & ~(nint)WINDOW_STYLE.WS_MAXIMIZEBOX);
+
+        const uint frameChanged = 0x0020;
+        const uint noMove = 0x0002;
+        const uint noSize = 0x0001;
+        if (!SetWindowPos(new WindowInteropHelper(window).Handle, 0, 0, 0, 0, 0,
+                frameChanged | noMove | noSize | SWP_NOZORDER | SWP_NOACTIVATE))
+        {
+            throw new Win32Exception(Marshal.GetLastPInvokeError());
+        }
+    }
+
+    internal static bool HandleMaximizeMessage(int message, nint wParam, nint lParam)
+    {
+        const int wmSysCommand = 0x0112;
+        const int scMaximize = 0xF030;
+        const int wmStyleChanging = 0x007C;
+
+        // WPF/WindowChrome 可能在显示或刷新样式时重新加入最大化权限。
+        if (message == wmStyleChanging && unchecked((int)(long)wParam) == (int)WINDOW_LONG_PTR_INDEX.GWL_STYLE)
+        {
+            var styles = Marshal.PtrToStructure<WindowStyleChange>(lParam);
+            styles.NewStyle &= ~(uint)WINDOW_STYLE.WS_MAXIMIZEBOX;
+            Marshal.StructureToPtr(styles, lParam, false);
+            return true;
+        }
+
+        return message == wmSysCommand && ((long)wParam & 0xFFF0) == scMaximize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct WindowStyleChange
+    {
+        public uint OldStyle;
+        public uint NewStyle;
+    }
+
     private static nint GetWindowStyle(HWND hWnd, WINDOW_LONG_PTR_INDEX nIndex)
     {
         var style = PInvoke.GetWindowLongPtr(hWnd, nIndex);
@@ -360,8 +404,21 @@ public static class Win32Helper
         }
 
         var monitorInfo = MonitorInfo.GetNearestDisplayMonitor(hWnd);
-        return (appBounds.bottom - appBounds.top) == monitorInfo.Bounds.Height &&
-               (appBounds.right - appBounds.left) == monitorInfo.Bounds.Width;
+        var windowBounds = new Rect(
+            appBounds.left,
+            appBounds.top,
+            appBounds.right - appBounds.left,
+            appBounds.bottom - appBounds.top);
+        return IsWindowBoundsFullscreen(windowBounds, monitorInfo.Bounds);
+    }
+
+    internal static bool IsWindowBoundsFullscreen(Rect windowBounds, Rect monitorBounds)
+    {
+        const double tolerance = 1;
+        return Math.Abs(windowBounds.Left - monitorBounds.Left) <= tolerance &&
+               Math.Abs(windowBounds.Top - monitorBounds.Top) <= tolerance &&
+               Math.Abs(windowBounds.Right - monitorBounds.Right) <= tolerance &&
+               Math.Abs(windowBounds.Bottom - monitorBounds.Bottom) <= tolerance;
     }
 
     #endregion

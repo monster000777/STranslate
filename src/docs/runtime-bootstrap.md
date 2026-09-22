@@ -55,9 +55,11 @@
 11. 非首次向导路径仍按原流程创建主窗口，并在 `Loaded` 时执行完整 `Settings.LazyInitialize()`。
 
 ### 从入口到结果：退出与资源回收
-1. `ProcessExit`、`Application.Exit`、`SessionEnding` 任一事件触发时统一进入 `Dispose()`。
-2. 在主线程释放资源：通知图标卸载、主窗口 VM 释放、主窗口释放、`PluginManager.Dispose()` 清理临时解压目录。
-3. 需要重启生效的插件目录清理并不在这里直接删除，而由下次启动时的插件扫描阶段处理（`NeedDelete`/`NeedUpgrade` 标记）。
+1. 应用使用 `ShutdownMode.OnExplicitShutdown`，关闭最后一个窗口不会终止托盘常驻进程。
+2. 主动退出统一调用 `App.RequestShutdown(AppShutdownReason)`；托盘菜单、托盘双击、快捷键、更新、备份恢复、便携模式切换和插件变更分别记录退出原因。
+3. `ProcessExit`、`Application.Exit`、`SessionEnding` 任一事件触发时统一进入 `Dispose()`；`Application.Exit` 会同时记录已知退出原因，无法归因的退出记录为 `ExternalOrUnknown`。
+4. 在主线程释放资源：通知图标卸载、主窗口 VM 释放、主窗口释放、`PluginManager.Dispose()` 清理临时解压目录。
+5. 需要重启生效的插件目录清理并不在这里直接删除，而由下次启动时的插件扫描阶段处理（`NeedDelete`/`NeedUpgrade` 标记）。
 
 ### 从入口到结果：管理员/后台启动交接
 1. 主进程判断需要以其他启动模式重启时，调用 `SingleInstance<App>.Cleanup()` 释放 Mutex 和命名管道。
@@ -81,7 +83,10 @@
 
 ### 窗口生命周期要点
 - `MainWindow`：
-  - `OnLoaded()` 会按 `HideOnStartup` 计算窗口位置并挂接窗口过程钩子。
+  - 常规设置 `AutoHideAtTopEdge`（默认开启）启用贴顶收起：主窗口靠近当前显示器工作区顶边 8 DIP 内吸附，鼠标离开后等待 `TopEdgeAutoHideDelayMs`（默认 600ms，可在展开的设置项中调整为 100–10000ms，修改后即时生效）再隐藏主窗口并显示 6 DIP 的主题感应条，悬停展开后恢复主窗口内部输入框焦点，不主动激活其他应用。感应条使用主题强调色、动态描边、圆角和轻微阴影，跟随明暗主题切换。拖离顶边或关闭开关退出贴顶，并恢复原来的置顶绑定；菜单、模态窗口、拖动及键盘输入期间延缓收起。
+  - `TopEdgeAutoHideController` 独立管理感应条和临时置顶，不把主窗口移出屏幕，避免影响上方显示器和持久化位置。感应条首次创建时显式继承主窗口主题，避免错过启动初始化后主题画刷为空、整条透明；显式清空窗口 Style，避免全局现代窗口模板的标题栏把内容推到 6 DIP 窗口之外而被裁掉。贴顶期间优先于失焦隐藏，显式隐藏仍隐藏感应条；统一 `Show()` 先展开并保留贴顶位置。
+  - 收起和展开使用 `TopEdgeSlideAnimation` 的 180ms 缓出滑动：无激活的临时窗口通过 DWM 实时预览统一承载内容与背景，裁剪并滑动整幅画面；主窗口仅临时 Cloak，位置、布局、视觉树及原生区域不变，收起完成后才隐藏。展开前先 Cloak，再 `Show()`，等首帧布局和渲染完成后从感应条展开，避免背景先出现。反向操作从当前帧接续；关闭开关、主动隐藏、拖动、输入或点击过渡层会取消动画并清理预览、撤销 Cloak。遵循系统的客户端区域动画开关，无法创建系统预览时直接收展。
+  - `OnLoaded()` 按 `HideOnStartup` 计算窗口位置，并在现代窗口模板初始化后挂接窗口过程钩子、移除 `WS_MAXIMIZEBOX`；窗口过程过滤 `WM_STYLECHANGING`，防止框架重新加入最大化权限，并拦截 `SC_MAXIMIZE`，禁止标题栏双击、顶部拖拽与系统快捷键最大化，同时保留横向缩放。
   - `OnContentRendered()` 决定首次显示或隐藏。
   - `OnDeactivated()` 可按 `HideWhenDeactivated` 自动隐藏，避免 Alt-Tab 残留。
   - 前台激活与失焦隐藏是两条独立链路；`HideWhenDeactivated` 决定是否隐藏，置顶窗口不会触发隐藏。
@@ -110,6 +115,7 @@
 
 ## 关键数据结构/配置
 - `Settings`：主行为配置（窗口、主题、热键策略、网络、OCR/图像翻译参数等）。
+- `AppShutdownReason`：统一标识主动退出、重启以及系统会话结束等退出来源。
 - `StartMode`：普通启动、提权启动、计划任务启动。
 - `HotkeySettings`：全局热键、软件内热键、增量翻译键、Ctrl+CC 配置。
 - `ServiceSettings`：服务实例列表与特殊服务 ID（替换翻译、图片翻译）。
@@ -118,7 +124,9 @@
 - `DataLocation`：便携/漫游目录选择、日志/缓存/配置路径、`InfoFilePath` 与 `BackupFilePath`。
 
 ## 关键文件
+- `STranslate/App.xaml`
 - `STranslate/App.xaml.cs`
+- `STranslate/Core/AppShutdownReason.cs`
 - `STranslate/Core/ISingleInstanceApp.cs`
 - `STranslate/Views/MainWindow.xaml.cs`
 - `STranslate/Views/SettingsWindow.xaml.cs`
@@ -133,6 +141,7 @@
 
 ## 常见改动任务
 - 新增启动期服务：在 `App()` 的 `ConfigureServices` 注册，并在 `OnStartup()` 明确初始化顺序。
+- 新增退出或重启入口：统一调用 `App.RequestShutdown()` 并补充明确的 `AppShutdownReason`，不要直接调用 WPF `Shutdown()`。
 - 增加全局异常策略：优先放到 `RegisterDispatcherUnhandledException` / `RegisterTaskSchedulerUnhandledException`。
 - 调整窗口初始行为：优先改 `MainWindow.OnContentRendered()` 与 `MainWindowViewModel.UpdatePosition()` 配合逻辑。
 - 调整窗口置前行为：普通/强制 Win32 细节统一修改 `Win32Helper`；来源边界统一修改 `WindowActivationContext` 与 `ExternalCallService`，不要在具体热键或窗口命令中增加来源分支。

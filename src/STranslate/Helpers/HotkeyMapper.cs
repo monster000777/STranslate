@@ -1,6 +1,7 @@
 using ChefKeys;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NHotkey;
 using NHotkey.Wpf;
 using STranslate.Core;
 using System.Diagnostics;
@@ -51,46 +52,57 @@ public class HotkeyMapper
     /// <param name="hotkeyStr">热键字符串</param>
     /// <param name="action">触发回调</param>
     /// <returns></returns>
-    internal static bool SetHotkey(string hotkeyStr, Action action)
+    internal static HotkeyRegistrationResult SetHotkey(string hotkeyStr, Action action, bool showConflictDialog = true)
     {
         var hotkey = new HotkeyModel(hotkeyStr);
-        return SetHotkey(hotkey, action);
-    }
-
-    internal static bool SetHotkey(HotkeyModel hotkey, Action action)
-    {
-        string hotkeyStr = hotkey.ToString();
+        hotkeyStr = hotkey.ToString();
 
         // 避免注册空热键导致异常 谷歌浏览器通知会触发注册里的回调
         // https://github.com/STranslate/STranslate/issues/559
         if (string.IsNullOrEmpty(hotkeyStr))
-            return true;
+            return HotkeyRegistrationResult.Success;
         //_logger.LogInformation("Registering hotkey: {HotkeyStr}", hotkeyStr);
 
         if (IsReservedGlobalHotkey(hotkey))
         {
             _logger.LogWarning("Skipped reserved global hotkey: {HotkeyStr}", hotkeyStr);
-            return false;
+            return HotkeyRegistrationResult.Failed;
         }
 
         // 避免 NHotkey 注册和低级钩子的按住键使用同一个主键。
         if (IsRegisteredHoldKey(hotkey.CharKey))
-            return false;
+            return HotkeyRegistrationResult.Failed;
 
         try
         {
             // Win 键必须用 ChefKeys
             if (hotkeyStr == LWin || hotkeyStr == RWin)
-                return SetWithChefKeys(hotkeyStr, action);
+                return SetWithChefKeys(hotkeyStr, action)
+                    ? HotkeyRegistrationResult.Success
+                    : HotkeyRegistrationResult.Failed;
 
             HotkeyManager.Current.AddOrReplace(hotkeyStr, hotkey.CharKey, hotkey.ModifierKeys, (_, _) => action.Invoke());
-            return true;
+            return HotkeyRegistrationResult.Success;
+        }
+        catch (HotkeyAlreadyRegisteredException e)
+        {
+            if (showConflictDialog)
+            {
+                _logger.LogError(e, "Error registering hotkey: {HotkeyStr}", hotkeyStr);
+                ShowDialog(string.Format(_i18n.GetTranslation("RegisterHotkeyFailed"), hotkeyStr));
+            }
+            else
+            {
+                _logger.LogWarning("Hotkey is temporarily unavailable, registration will be retried: {HotkeyStr}", hotkeyStr);
+            }
+
+            return HotkeyRegistrationResult.Conflict;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error registering hotkey: {HotkeyStr}", hotkeyStr);
             ShowDialog(string.Format(_i18n.GetTranslation("RegisterHotkeyFailed"), hotkeyStr));
-            return false;
+            return HotkeyRegistrationResult.Failed;
         }
     }
 
@@ -479,4 +491,11 @@ public class HotkeyMapper
     private static bool ShouldSkipHotkey() => HotkeyExecutionGuard.ShouldSkipGlobalHotkey();
 
     #endregion
+}
+
+internal enum HotkeyRegistrationResult
+{
+    Success,
+    Conflict,
+    Failed
 }

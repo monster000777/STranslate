@@ -9,7 +9,7 @@
         <!-- NuGet 包信息 -->
         <!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
         <PackageId>STranslate.Plugin</PackageId>
-        <PackageVersion>1.0.14</PackageVersion>
+        <PackageVersion>1.0.15</PackageVersion>
         <Authors>zggsong</Authors>
         <Description>STranslate plugin framework with auto-packaging support</Description>
         <PackageTags>stranslate</PackageTags>

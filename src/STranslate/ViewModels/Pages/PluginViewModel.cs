@@ -698,7 +698,7 @@ public partial class PluginViewModel : ObservableObject
         if (restartResult == ContentDialogResult.Primary)
         {
             UACHelper.Run(_settings.StartMode);
-            App.Current.Shutdown();
+            App.RequestShutdown(AppShutdownReason.PluginChange);
         }
         else
         {
@@ -845,7 +845,7 @@ public partial class PluginViewModel : ObservableObject
             if (restartResult == ContentDialogResult.Primary)
             {
                 UACHelper.Run(_settings.StartMode);
-                App.Current.Shutdown();
+                App.RequestShutdown(AppShutdownReason.PluginChange);
             }
         }
     }
@@ -896,7 +896,7 @@ public partial class PluginViewModel : ObservableObject
         }.ShowAsync() == ContentDialogResult.Primary)
         {
             UACHelper.Run(_settings.StartMode);
-            App.Current.Shutdown();
+            App.RequestShutdown(AppShutdownReason.PluginChange);
         }
     }
 

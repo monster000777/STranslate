@@ -64,7 +64,7 @@
   - 图片翻译 OCR 服务必须 override `SupportBoxPoints()` 并返回 `true`，否则不会出现在图片翻译 OCR 选择列表。
   - 服务商能返回段落/区域结构时直接填充 `OcrResult.Regions`；`Auto` / `Provider` 模式会按是否存在有效 `Regions` 判断结构化分段。
   - 图片翻译专用链路、`Auto` / `Provider` / `Smart` 分段策略和结构化分段影响见 [flow-image-translation.md](flow-image-translation.md)。
-- `LangEnum`：语言枚举，当前包含 `Uzbek`；新增语言时需要同步主程序语言检测、内置插件语言映射和本地化文本。
+- `LangEnum`：语言枚举，当前包含 `Uzbek`、`Uyghur`；新增语言时需要同步主程序语言检测、内置插件语言映射、本地化文本与双向文本布局规则。
 
 ### 图片翻译 OCR 插件要求
 - 普通 OCR 插件仍只需要实现 `IOcrPlugin`；想进入图片翻译 OCR 下拉列表时，必须实现 `SupportBoxPoints() => true`。

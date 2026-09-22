@@ -1,5 +1,9 @@
 Reference this package to develop a plugin for [STranslate](https://github.com/STranslate/STranslate).
 
+## v1.0.15 - 2026-09-04
+
+- `LangEnum` 新增维吾尔语（`Uyghur`）
+
 ## v1.0.14 - 2026-08-14
 
 - `IAudioPlayer` 新增 `PlayAsync(AudioData, CancellationToken)`，支持显式播放 MP3、WAV 和裸 PCM

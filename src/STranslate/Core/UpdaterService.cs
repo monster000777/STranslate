@@ -88,7 +88,7 @@ public class UpdaterService(
             if (AppMessageBox.Show(newVersionTips, Constant.AppName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 updateManager.WaitExitThenApplyUpdates(newUpdateInfo);
-                Application.Current.Shutdown();
+                App.RequestShutdown(AppShutdownReason.ApplicationUpdate);
             }
         }
         catch (Exception e)

@@ -12,6 +12,8 @@
 | `ja` | 日本語 | |
 | `ko` | 한국어 | |
 | `tr` | Türkçe | |
+| `ru` | Русский | |
+| `uk` | Українська | |
 
 语言代码沿用 [VS Code 命名习惯](https://code.visualstudio.com/docs/getstarted/locales)（小写、连字符分隔，如 `zh-cn`、`pt-br`）。
 
@@ -208,7 +210,10 @@ internal static class AvailableLanguages
 - ❌ 无需重启提示：语言切换是热切换。
 
 ### 已知硬编码（待修复）
-- `STranslate/ViewModels/SearchViewModelBase.cs:78` 的 `"No results found"` 未走 i18n，切换到非英文语言时仍显示英文。贡献语言时建议一并修复（新增 key 并在各语言文件补翻译）。
+- 已修复（均走 i18n，对应日志保持中文）：设置页搜索框的「无结果」提示 `NoResultsFound`；网络页代理测试的四条结果提示 `ProxyTesting` / `ProxyTestSuccess` / `ProxyTestFailed` / `ProxyTestError`；服务添加对话框的标题 `AddTranslationService` / `AddOcrService` / `AddTtsService` / `AddVocabularyService` / `AddService`；词典服务不支持替换的提示 `DictionaryServiceNotSupportReplace`；插件版本校验的三条提示 `PluginVersionParseFailed` / `PluginVersionTooOld` / `PluginUpgradeAvailable`；外部调用服务启动失败的提示 `ExternalCallStartFailed`。
+- 仍待处理（本 PR 未涉及，需先定方案）：
+  - 抛给用户的异常文案基本都是中文。`ex.Message` 会被直接拼进 Snackbar 或对话框，共 11 处：`ViewModels/MainWindowViewModel.cs:1218`、`:1369`，`ViewModels/ImageTranslateWindowViewModel.cs:281`、`:387`、`:440`，`ViewModels/OcrWindowViewModel.cs:200`、`:322`、`:363`，`ViewModels/Pages/HistoryViewModel.cs:288`，`ViewModels/Pages/PluginViewModel.cs:349`、`:605`。因此 `Helpers/LanguageDetector.cs`、`Core/AudioReaderFactory.cs` 以及各插件里的 `throw new Exception("请求结果为空")` 之类都会原样呈现给用户；改动面涉及大量调用点和插件语言文件，宜另开 PR。
+  - `Helpers/HistoryCsvHelper.cs` 的历史记录 CSV 导出：表头（`:37` 起）以及写进单元格的 `回译:`（`:128`）、`词条:`（`:141`）、`释义:`（`:145`）、`例句:`（`:152`）和分隔符 `；`（`:163`）均为中文。它属于导出文件格式而非界面文案，跟随界面语言会影响既有文件的解析，需要先定方案。
 
 ## 开发参考：在代码 / XAML 中使用国际化
 

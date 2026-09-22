@@ -128,7 +128,7 @@ public partial class AboutViewModel(
             return;
         }
 
-        App.Current.Shutdown();
+        App.RequestShutdown(AppShutdownReason.PortableModeChange);
     }
 
     private void Locate(string? folder)

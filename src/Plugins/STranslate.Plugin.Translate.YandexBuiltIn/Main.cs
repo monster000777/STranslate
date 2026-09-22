@@ -83,6 +83,7 @@ public class Main : TranslatePluginBase
         LangEnum.Dutch => "nl",
         LangEnum.Ukrainian => "uk",
         LangEnum.Uzbek => "uz",
+        LangEnum.Uyghur => null,
         _ => "auto"
     };
 
@@ -120,6 +121,7 @@ public class Main : TranslatePluginBase
         LangEnum.Dutch => "nl",
         LangEnum.Ukrainian => "uk",
         LangEnum.Uzbek => "uz",
+        LangEnum.Uyghur => null,
         _ => "auto"
     };
 

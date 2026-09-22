@@ -8,6 +8,7 @@ namespace STranslate.Services;
 public partial class TranslateService : BaseService
 {
     private readonly ServiceSettings _serviceSettings;
+    private readonly Internationalization _i18n;
 
     [ObservableProperty] public partial Service? ReplaceService { get; set; }
     [ObservableProperty] public partial Service? ImageTranslateService { get; set; }
@@ -23,6 +24,7 @@ public partial class TranslateService : BaseService
     ) : base(pluginManager, serviceManager, PluginService, serviceSettings, i18n)
     {
         _serviceSettings = serviceSettings;
+        _i18n = i18n;
 
         // Ensure all service data have translation options
         foreach (var item in SvcSettingDatas)
@@ -65,7 +67,8 @@ public partial class TranslateService : BaseService
     {
         if (svc.Plugin is IDictionaryPlugin)
         {
-            AppMessageBox.Show("词典服务不支持替换功能。", Constant.AppName, MessageBoxButton.OK, MessageBoxImage.Warning);
+            AppMessageBox.Show(_i18n.GetTranslation("DictionaryServiceNotSupportReplace"), Constant.AppName, MessageBoxButton.OK,
+                MessageBoxImage.Warning);
             return;
         }
 
@@ -86,7 +89,8 @@ public partial class TranslateService : BaseService
     {
         if (svc.Plugin is IDictionaryPlugin)
         {
-            AppMessageBox.Show("词典服务不支持替换功能。", Constant.AppName, MessageBoxButton.OK, MessageBoxImage.Warning);
+            AppMessageBox.Show(_i18n.GetTranslation("DictionaryServiceNotSupportReplace"), Constant.AppName, MessageBoxButton.OK,
+                MessageBoxImage.Warning);
             return;
         }
 

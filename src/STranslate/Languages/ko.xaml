@@ -26,6 +26,7 @@
     <sys:String x:Key="TimeoutPlaceholder">시간 초과 (초)</sys:String>
     <sys:String x:Key="SearchFunction">기능 검색</sys:String>
     <sys:String x:Key="SearchFunctionToolTip">Ctrl+F를 눌러 기능 검색</sys:String>
+    <sys:String x:Key="NoResultsFound">결과를 찾을 수 없습니다</sys:String>
     <sys:String x:Key="Function">기능</sys:String>
     <sys:String x:Key="Appearance">외관</sys:String>
     <sys:String x:Key="AutoTranslateEnabled">자동 번역 활성화</sys:String>
@@ -37,6 +38,10 @@
     <sys:String x:Key="General_HideOnStartup">시작 시 메인 창 숨기기</sys:String>
     <sys:String x:Key="General_HideOnStartupDescription">STranslate 실행 후 검색 창을 트레이로 숨깁니다.</sys:String>
     <sys:String x:Key="General_HideWhenDeactivated">포커스 해제 시 자동 숨김</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdge">상단 가장자리에서 자동으로 접기</sys:String>
+    <sys:String x:Key="General_AutoHideAtTopEdgeDescription">창을 화면 상단으로 끌어다 놓으면 마우스 포인터가 벗어날 때 자동으로 접히고, 상단 표시줄에 포인터를 올리면 펼쳐집니다. 상단에 붙어 있을 때는 포커스를 잃으면 숨기는 설정보다 우선합니다.</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelay">접기 대기 시간(밀리초)</sys:String>
+    <sys:String x:Key="General_TopEdgeAutoHideDelayDescription">포인터가 창 밖에 있을 때 자동으로 접기 전 대기 시간입니다. 기본값: 600밀리초.</sys:String>
     <sys:String x:Key="General_WindowPosition">메인 창 위치</sys:String>
     <sys:String x:Key="General_WindowAlign">모니터상 위치</sys:String>
     <sys:String x:Key="General_MainWindowMaxHeightRatio">메인 창 최대 높이(화면 비율)</sys:String>
@@ -80,7 +85,7 @@
     <sys:String x:Key="General_SelectedTextFetchTimeoutDescription">복사 시뮬레이션 후 새 클립보드 텍스트를 폴링하는 시간 초과 값입니다. 단위: 밀리초. 텍스트가 업데이트되면 즉시 반환되며, 일부 PDF 앱의 업데이트가 느리면 값을 높이세요.</sys:String>
     <sys:String x:Key="General_SelectedTextFetchTimeoutPlaceholder">500</sys:String>
     <sys:String x:Key="General_CrosswordFetchFailedFallbackTarget">드래그 번역 실패 시 복귀 대상</sys:String>
-    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">선택 텍스트 가져오기에 실패했을 때 입력 번역으로 전환할지, 메인 창만 표시할지 선택합니다.</sys:String>
+    <sys:String x:Key="General_CrosswordFetchFailedFallbackTargetDescription">선택한 텍스트를 가져오지 못했을 때 입력 번역 열기, 메인 창 표시 또는 트레이 알림만 보내기 중에서 선택합니다.</sys:String>
     <sys:String x:Key="General_ImageQuality">이미지 품질</sys:String>
     <sys:String x:Key="General_ImageQualityDescription">이미지 처리 시 품질을 조정합니다. 온라인 OCR 서비스는 이미지 크기를 제한할 수 있습니다.</sys:String>
     <sys:String x:Key="General_DoubleClickTrayFunction">트레이 아이콘 더블 클릭 기능</sys:String>
@@ -177,6 +182,7 @@
     <sys:String x:Key="Hotkey_CrosswordTranslateByCtrlSameCDescription">마우스로 텍스트를 선택하고 빠르게 Ctrl+C+C를 눌러 번역합니다.</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailed">선택 텍스트를 가져오지 못했습니다. 입력 번역을 열었습니다.</sys:String>
     <sys:String x:Key="CrosswordTranslateFetchFailedShowWindow">선택 텍스트를 가져오지 못했습니다. 메인 창을 표시했습니다.</sys:String>
+    <sys:String x:Key="CrosswordTranslateFetchFailedNotifyOnly">선택한 텍스트를 가져오지 못했습니다. 텍스트를 선택한 후 다시 시도하세요.</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslation">마우스 선택 즉시 번역</sys:String>
     <sys:String x:Key="Hotkey_MouseSelectionTranslationDescription">마우스 선택 즉시 번역을 켜거나 끕니다.</sys:String>
     <sys:String x:Key="Hotkey_ReplaceTranslate">치환 번역</sys:String>
@@ -214,6 +220,8 @@
     <sys:String x:Key="Hotkey_OcrImTransWindow">OCR | 이미지 번역 창 단축키</sys:String>
     <sys:String x:Key="Hotkey_ReExecuteOcr">텍스트 인식 | 이미지 번역 재실행</sys:String>
     <sys:String x:Key="Hotkey_SwitchImage">렌더링 이미지/마킹 이미지 전환</sys:String>
+    <sys:String x:Key="Hotkey_SwitchImageDescription">고정된 창에서도 원본 이미지와 번역 이미지를 전환할 수 있습니다.</sys:String>
+    <sys:String x:Key="Hotkey_PinImageTranslate">이미지 번역 고정 (간소화 창)</sys:String>
     <sys:String x:Key="Hotkey_QrCode">QR 코드 인식</sys:String>
     <sys:String x:Key="Hotkey_QrCodeDescription">이 단축키는 OCR 창에서만 지원됩니다.</sys:String>
     <sys:String x:Key="Hotkey_IncrementalTranslate">증분 번역</sys:String>
@@ -309,6 +317,11 @@
     <sys:String x:Key="Network_HelpBypassListContent" xml:space="preserve">여러 주소는 세미콜론(;)으로 구분하며 와일드카드(*)를 지원합니다:&#10;localhost;127.*;10.*;192.168.*;*.example.com</sys:String>
     <sys:String x:Key="Network_HelpEffectiveness">적용 설명</sys:String>
     <sys:String x:Key="Network_HelpEffectivenessContent" xml:space="preserve">프록시 구성 수정은 약 2분 후 적용됩니다&#10;즉시 적용하려면 재시작이 필요합니다</sys:String>
+    <sys:String x:Key="ProxyTesting">연결 테스트 중...</sys:String>
+    <sys:String x:Key="ProxyTestSuccess">연결 성공! 현재 IP 정보: {0}</sys:String>
+    <sys:String x:Key="ProxyTestFailed">연결 실패, 프록시 설정을 확인하세요</sys:String>
+    <sys:String x:Key="ProxyTestError">테스트 실패: {0}</sys:String>
+    <sys:String x:Key="ExternalCallStartFailed">서비스를 시작하지 못했습니다. 포트를 다시 설정하세요: {0}</sys:String>
 
     <sys:String x:Key="Standalone_OcrShowAnnotationHeader">텍스트 감지 결과 표시</sys:String>
     <sys:String x:Key="Standalone_OcrShowAnnotationDescription">원본 이미지/텍스트 감지 이미지 표시 전환</sys:String>
@@ -571,6 +584,7 @@
     <sys:String x:Key="LangEnumDutch">네덜란드어</sys:String>
     <sys:String x:Key="LangEnumUkrainian">우크라이나어</sys:String>
     <sys:String x:Key="LangEnumUzbek">우즈베크어</sys:String>
+    <sys:String x:Key="LangEnumUyghur">위구르어</sys:String>
 
     <sys:String x:Key="LanguageDetectorTypeLocal">로컬 인식</sys:String>
     <sys:String x:Key="LanguageDetectorTypeBaidu">Baidu 인식</sys:String>
@@ -598,6 +612,7 @@
     <sys:String x:Key="TextSeparatorHandleScopeSilentOcr">자동 OCR</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetInputTranslate">입력 번역</sys:String>
     <sys:String x:Key="CrosswordFetchFailedFallbackTargetShowWindow">메인 창 표시</sys:String>
+    <sys:String x:Key="CrosswordFetchFailedFallbackTargetNotifyOnly">알림만 표시</sys:String>
 
     <sys:String x:Key="PluginTypeAll">모든 플러그인</sys:String>
     <sys:String x:Key="PluginTypeTranslate">텍스트 번역</sys:String>
@@ -691,6 +706,9 @@
     <sys:String x:Key="SelectPluginFile">플러그인 파일 선택</sys:String>
     <sys:String x:Key="PluginInstallFailed">플러그인 설치 실패</sys:String>
     <sys:String x:Key="PluginInstallSuccess">플러그인 설치 성공</sys:String>
+    <sys:String x:Key="PluginVersionParseFailed">플러그인 버전을 해석할 수 없습니다: {0}</sys:String>
+    <sys:String x:Key="PluginVersionTooOld">플러그인 버전이 너무 낮습니다: {0} v{1}, 현재 설치된 버전은 v{2}입니다.</sys:String>
+    <sys:String x:Key="PluginUpgradeAvailable">새 버전(v{0})으로 업그레이드할 수 있습니다.</sys:String>
     <sys:String x:Key="PluginDeleteConfirm" xml:space="preserve">제작자 {0}&#10;버전 {1}&#10;플러그인 「{2}」을(를) 삭제하시겠습니까?</sys:String>
     <sys:String x:Key="PluginDeleteFailed">플러그인 삭제 실패</sys:String>
     <sys:String x:Key="PluginDeleteForRestart">플러그인이 삭제 대상으로 표시되었습니다, 재시작 후 적용됩니다.</sys:String>
@@ -721,6 +739,12 @@
     <sys:String x:Key="BuiltIn">내장</sys:String>
     <sys:String x:Key="PreInstall">사전 설치</sys:String>
     <sys:String x:Key="Extend">확장</sys:String>
+    <sys:String x:Key="AddTranslationService">번역 서비스 추가</sys:String>
+    <sys:String x:Key="AddOcrService">텍스트 인식 서비스 추가</sys:String>
+    <sys:String x:Key="AddTtsService">음성 합성 서비스 추가</sys:String>
+    <sys:String x:Key="AddVocabularyService">단어장 서비스 추가</sys:String>
+    <sys:String x:Key="AddService">서비스 추가</sys:String>
+    <sys:String x:Key="DictionaryServiceNotSupportReplace">사전 서비스는 치환 기능을 지원하지 않습니다.</sys:String>
 
     <sys:String x:Key="PlayPronunciation">발음 재생</sys:String>
     <sys:String x:Key="Plural">복수형</sys:String>
@@ -828,4 +852,9 @@
     <sys:String x:Key="EditPrompt_Content">편집</sys:String>
     <sys:String x:Key="Temperature">온도 (Temperature)</sys:String>
     <sys:String x:Key="Temperature_Description">모델 출력의 무작위성을 제어합니다</sys:String>
+    <sys:String x:Key="ImageTranslatePin">고정</sys:String>
+    <sys:String x:Key="ImageTranslatePinFailed">고정하지 못했습니다</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedCopyAll">전체 텍스트 복사</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowOriginal">원본 이미지 표시</sys:String>
+    <sys:String x:Key="ImageTranslatePinnedShowTranslation">번역 표시</sys:String>
 </ResourceDictionary>

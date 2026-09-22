@@ -35,11 +35,12 @@
 ### 从入口到结果：全局热键触发命令
 1. `HotkeySettings.RegisterHotkeys()` 对每个全局热键调用 `HandleGlobalLogic(propertyName)`。
 2. `HandleGlobalLogic()` 通过 `HotkeyMapper.SetHotkey()` 注册系统热键并绑定命令回调。
-3. 回调执行前经 `WithFullscreenCheck()`：
+3. `ForegroundFullscreenMonitor` 监听前台窗口与窗口尺寸变化；启用全屏忽略时，进入全屏会注销普通全局热键，退出全屏会重新注册，避免按键仍被系统级热键占用。
+4. 回调执行前仍经 `WithFullscreenCheck()` 兜底：
    - `DisableGlobalHotkeys == true` 时禁用。
    - `IgnoreHotkeysOnFullscreen == true` 且前台全屏时跳过。
-4. 命令进入 `MainWindowViewModel`（例如截图翻译、图片翻译、静默 OCR、替换翻译、剪贴板监听切换）。
-5. 需要显示窗口的命令统一走 `MainWindowViewModel.Show()` 或 `SingletonWindowOpener`；触发来源不改变窗口激活策略。
+5. 命令进入 `MainWindowViewModel`（例如截图翻译、图片翻译、静默 OCR、替换翻译、剪贴板监听切换）。
+6. 需要显示窗口的命令统一走 `MainWindowViewModel.Show()` 或 `SingletonWindowOpener`；触发来源不改变窗口激活策略。
 
 ### 从入口到结果：输入翻译
 1. 输入翻译全局热键、外部调用 `translate_input`、托盘双击输入翻译、划词失败回退到输入翻译都会进入 `MainWindowViewModel.InputClear()`。
@@ -81,13 +82,16 @@
    - `ScreenshotTranslate`：截图翻译 OCR 结果。
    - `SilentOcr`：静默 OCR 写入剪贴板结果。
 5. 划词翻译取词失败时按 `CrosswordFetchFailedFallbackTarget` 分支：
+   - 划词翻译调用 `GetTextAsync(showFailureFeedback: false)`，避免共用取词方法提前显示主窗口；失败反馈统一由 `HandleCrosswordFetchFailed()` 处理。
    - `InputTranslate`：清空输入并显示主窗口，回退到输入翻译；输入框会临时显示，不改写隐藏输入框设置。
    - `ShowWindow`：仅显示主窗口，保留当前输入和结果。
+   - `NotifyOnly`：仅发送托盘通知，不显示或激活主窗口，保留当前输入和结果。
 
 ### 触发失败的通知策略
+- 启动或退出全屏后恢复全局热键时，若遇到系统占用会进行有限退避重试；瞬时冲突保持静默，重试成功后自动恢复，只有全部重试失败才标记冲突并提示。用户手动修改为冲突热键时仍立即提示；修改快捷键、禁用全局热键、进入全屏暂停状态或退出应用时会取消旧重试。
 - 服务未配置（如截图翻译的 OCR 服务、替换翻译服务、TTS 等）：弹出 MessageBox（OK/Cancel），点击确定自动打开设置窗口并定位到对应配置页。业务入口收敛到 `Helper.PromptConfigureService`，弹窗显示收敛到 `AppMessageBox`，活动窗口优先、透明 owner 兜底。
 - 运行时失败（如 OCR 识别异常、语言检测失败）：在当前窗口内通过 **Snackbar** 提示；静默类操作（静默 OCR、截图翻译异常）会先 `Show()` 主窗口再弹 Snackbar，确保用户可见。
-- 剪贴板监听启停：保留系统 **Toast** 通知（唯一保留 Toast 的场景），因其为非关键状态提示。
+- 剪贴板监听启停、划词取词失败回退选择“仅通知”时：使用系统 **Toast** 托盘通知，无需显示主窗口。
 
 ### 软件内热键
 - 主窗口、OCR 窗口、图片翻译窗口通过 `InputBindings` 绑定 `HotkeySettings.*Hotkey.Key`。
@@ -128,6 +132,7 @@
 ## 关键文件
 - `STranslate/Core/HotkeySettings.cs`
 - `STranslate/Helpers/HotkeyMapper.cs`
+- `STranslate/Helpers/ForegroundFullscreenMonitor.cs`
 - `STranslate/Helpers/CtrlSameCHelper.cs`
 - `STranslate/Services/MouseHookService.cs`
 - `STranslate/Services/MouseSelectionService.cs`

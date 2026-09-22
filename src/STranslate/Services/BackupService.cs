@@ -58,7 +58,7 @@ public class BackupService(Settings Settings,
             "-w", string.Format(i18n.GetTranslation("BackupConfigSuccess"), filePath)
             ];
         Utilities.ExecuteProgram(DataLocation.HostExePath, args);
-        App.Current.Shutdown();
+        App.RequestShutdown(AppShutdownReason.LocalBackup);
     }
 
     public async Task LocalRestoreAsync()
@@ -98,7 +98,7 @@ public class BackupService(Settings Settings,
             "-w", string.Format(i18n.GetTranslation("RestoreConfigSuccess"), filePath)
             ];
         Utilities.ExecuteProgram(DataLocation.HostExePath, args);
-        App.Current.Shutdown();
+        App.RequestShutdown(AppShutdownReason.LocalRestore);
     }
 
     #endregion
@@ -144,7 +144,7 @@ public class BackupService(Settings Settings,
             "-w", filePath
             ];
         Utilities.ExecuteProgram(DataLocation.HostExePath, args);
-        App.Current.Shutdown();
+        App.RequestShutdown(AppShutdownReason.WebDavBackup);
     }
 
     public async Task PostWebDavBackupAsync(string filePath)
@@ -265,7 +265,7 @@ public class BackupService(Settings Settings,
                 "-w", string.Format(i18n.GetTranslation("RestoreConfigSuccess"), "WebDav")
             ];
             Utilities.ExecuteProgram(DataLocation.HostExePath, args);
-            App.Current.Shutdown();
+            App.RequestShutdown(AppShutdownReason.WebDavRestore);
         }
         catch { }
         finally

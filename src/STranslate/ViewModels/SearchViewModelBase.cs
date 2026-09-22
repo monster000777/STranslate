@@ -75,7 +75,7 @@ public partial class SearchViewModelBase : ObservableObject, IDisposable
         }
         if (suggestions.Count == 0)
         {
-            suggestions.Add("No results found");
+            suggestions.Add(_i18n.GetTranslation("NoResultsFound"));
         }
 
         sender.ItemsSource = suggestions;
